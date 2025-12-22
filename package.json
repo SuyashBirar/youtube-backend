@@ -1,0 +1,12 @@
+{
+  "name": "youtubebackend",
+  "version": "1.0.0",
+  "description": "youtube backend",
+  "license": "ISC",
+  "author": "Suyash Birar",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
