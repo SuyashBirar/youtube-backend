@@ -17,7 +17,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
     const { fullName, email, username, password } = req.body
-    console.log("email:", email);
+    // console.log("email:", email);
 
     if ([fullName, email, password, username].some(
         (field) => field?.trim() === "")) {
@@ -28,7 +28,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     //Check if user already exists
 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or: [{ username }, { email }]
     })
 
@@ -40,7 +40,12 @@ const registerUser = asyncHandler(async (req, res) => {
     //Check for images
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar image needed")
@@ -71,7 +76,7 @@ const registerUser = asyncHandler(async (req, res) => {
     })
 
     //Removing password and refreshtoken fields and checking whether user created
-    const createdUser = User.findById(user._id).select(
+    const createdUser = await User.findById(user._id).select(
         "-password -refreshToken"
     )
     if (!createdUser) {

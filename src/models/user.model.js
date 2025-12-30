@@ -32,10 +32,12 @@ const userSchema = new Schema(
         coverImage: {
             type: String,  //cloudinary url
         },
-        watchHistory: {
-            type: Schema.Types.ObjectId,
-            ref: "Video"
-        },
+        watchHistory: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Video"
+            }
+        ],
         password: {
             type: String,
             required: [true, 'Password required']
@@ -52,10 +54,10 @@ const userSchema = new Schema(
 
 //Before the database is saved this will run to hash the password by using bcrypt
 //only if password is modified
-userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
     this.password = await bcrypt.hash(this.password, 10)
-    next()
+
 })
 
 
